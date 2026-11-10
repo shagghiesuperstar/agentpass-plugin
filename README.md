@@ -9,30 +9,21 @@ tool discovery, retries with backoff, and an error taxonomy that never throws
 into the agent loop.
 
 ```
-you:    how agent-ready is example.com?
+you:    how agent-ready is humanpeptides.fyi?
 
-hermes: ⚙ agent_readiness_scan  url=example.com
-        Agent readiness — https://example.com/
-          ARI-100 39/100 · grade F — Unreadable · level L0
-          71 of 113 checks scored · 24 pass · 10 partial · 37 fail
-          crawler access 100/100 · accessibility 78/100 · core 39 + bonus 0
-
-          Domains
-               83%  Reachability & Access   9/14  w20
-             80.8%  Render & Delivery       9/10  w10
-             30.8%  Structure & Semantics   2/12  w12
-             15.8%  Structured Data          1/7   w12
-                0%  Discovery Files          0/17  w14
-                —  Agent Interfaces         0/0   w14
-                0%  Operability & Commerce 0/1   w10
-             41.7%  Trust & Authority       3/10  w8
-
-          Recoverable fixes — 47 open, up to +90 points
-             1. +5 pts  render/ssr-home — Homepage content is in the raw HTML
-             2. +4 pts  data/jsonld — JSON-LD structured data is present
-             3. +4 pts  data/jsonld-valid — Structured data validates
-             ...
+hermes: ⚙ agent_readiness_scan  url=humanpeptides.fyi
+        https://humanpeptides.fyi/ — ARI-100 89/100, grade B (Agent-aware), level L2.
+        Crawler access 100/100 · accessibility 67/100 · 57/76 checks passing.
+        19 fixes, highest value first:
+        1. [a11y-names] +3 — Controls expose accessible names (3 control(s) without an obvious name)
+        2. [img-alt] +2 — Images carry text alternatives (1/2 images without alt)
+        3. [link-headers] +2 — HTTP Link headers point at machine resources (no Link header)
+        4. [agents-md] +2 — A skill file tells coding agents how to work with the site (AGENTS.md HTTP 404)
+        5. [about-contact] +2 — About and contact are reachable (no about or contact link)
 ```
+
+The second tool, `agent_readiness_fix_prompt`, turns the same report into one
+ordered prompt you can paste into a coding agent.
 
 ## What it does
 
