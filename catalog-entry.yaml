@@ -1,0 +1,38 @@
+# Hermes plugin catalog entry — template for plugin-catalog/agentpass.yaml.
+#
+# Schema: plugin-catalog/README.md § Entry schema (authoritative copy in the
+# NousResearch/hermes-agent repo). Add exactly one file per plugin to
+# `plugin-catalog/<name>.yaml` and open a PR; a maintainer merges it.
+#
+# Before submitting:
+#   1. replace <40-HEX-SHA> with the full 40-character commit that is the release
+#   2. bump `version` in the same PR that bumps `sha` (it is a label, not a pin)
+#   3. quote `version`
+#   4. run: hermes plugins validate .
+#
+# `sha` must be a full 40-hex commit — branches, tags and short SHAs are rejected
+# by the loader. Every install clones and checks out exactly that commit.
+
+name: agentpass                      # [a-z0-9_-]{1,64}, the catalog key
+repo: https://github.com/OWNER/agentpass   # https:// only
+sha: <40-HEX-SHA>                    # mandatory exact pin
+subdir: "plugin"                     # the plugin lives beside engine/ and web/
+description: >-
+  Agent-readiness scanning over MCP: score any site on the Agent Readiness Index
+  (ARI-100) and get an ordered, paste-ready remediation prompt for a coding agent.
+maintainer: Scott Scheferman
+tier: community                      # official | verified are set by Nous maintainers only
+category: tools                      # desktop | memory | platform | web | tools | voice | automation | models | general
+requires_hermes: ">=0.23"            # matches the Hermes this was built and tested against
+docs_url: "https://agentpass.dev"
+version: "1.0.0"                     # quoted; shown as "1.0.0 @ <sha>"
+readme: true
+platforms: [linux, macos, windows]
+
+capabilities:
+  provides_tools:
+    - agent_readiness_scan
+    - agent_readiness_fix_prompt
+  provides_hooks: []
+  provides_middleware: []
+  requires_env: []

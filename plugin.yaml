@@ -1,0 +1,57 @@
+# AgentPass — Hermes plugin manifest.
+#
+# Schema: developer-guide/plugins → "Step 2: Write the manifest" (name, version,
+# description, author, provides_tools, capabilities) plus the "Manifest v2
+# reference" (manifest_version, api_version, license, homepage, tags,
+# config_schema). `hermes plugins validate` is the authority on this file.
+#
+# Hermes loads a DIRECTORY plugin through __init__.py:register(ctx) — there is
+# no `entrypoint` key in the manifest schema. Declaring one is ignored at load
+# and produces "unknown manifest field(s) ignored" in the doctor output, which
+# reads like a defect in a catalog review. Keep the key list exact.
+name: agentpass
+version: "1.0.0"
+description: >-
+  Agent-readiness scanning over MCP: score any site on the Agent Readiness Index
+  (ARI-100) and get an ordered, paste-ready remediation prompt for a coding agent.
+author: Scott Scheferman
+
+manifest_version: 2
+api_version: 1
+requires_hermes: ">=0.23"
+license: MIT
+homepage: https://agentpass.dev
+tags: [agent-readiness, aeo, geo, ai-seo, mcp, audit]
+
+provides_tools:
+  - agent_readiness_scan
+  - agent_readiness_fix_prompt
+
+# No privileged host surfaces: the plugin adds two read-only tools and never
+# overrides a built-in tool, picks a model, or touches another plugin.
+# (Capability ids live in hermes_cli/plugin_capabilities.py.)
+capabilities: []
+
+# Endpoint and transport tuning, editable under Settings → Plugins. `mcp_url`
+# defaults to the hosted endpoint; point it at a local server for development.
+config_schema:
+  mcp_url:
+    type: str
+    default: "https://agentpass.dev/mcp"
+    label: "MCP endpoint"
+    description: "Streamable HTTP endpoint of the AgentPass MCP server."
+  timeout_seconds:
+    type: float
+    default: 45
+    label: "Request timeout (s)"
+    description: "Per-attempt deadline. A cold scan of a large site can take 20-40s."
+  max_retries:
+    type: int
+    default: 2
+    label: "Retries"
+    description: "Extra attempts on 429/5xx or a dropped connection (0-5)."
+  cache_ttl_seconds:
+    type: float
+    default: 600
+    label: "Report cache TTL (s)"
+    description: "How long a scan is reused by agent_readiness_fix_prompt."
