@@ -37,9 +37,10 @@ except ImportError:  # imported standalone (tests, REPL)
 # first call works. Most durable host goes last, not first: a dead host first
 # costs a timeout on every cold start.
 DEFAULT_ENDPOINTS = (
+    # the deployed service: a Cloudflare Worker, so it does not depend on this Mac,
+    # a tunnel or a domain we do not own
+    "https://agentpass.shagghie2.workers.dev/mcp",
     "https://sugar-clock-push-accessibility.trycloudflare.com/mcp",
-    "https://scooby.tail2eb5d4.ts.net/mcp",
-    "https://agentpass.dev/mcp",
 )
 DEFAULT_ENDPOINT = DEFAULT_ENDPOINTS[0]
 

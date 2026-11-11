@@ -10,7 +10,7 @@
 # and produces "unknown manifest field(s) ignored" in the doctor output, which
 # reads like a defect in a catalog review. Keep the key list exact.
 name: agentpass
-version: "1.0.1"
+version: "1.0.2"
 description: >-
   Agent-readiness scanning over MCP: score any site on the Agent Readiness Index
   (ARI-100) and get an ordered, paste-ready remediation prompt for a coding agent.
