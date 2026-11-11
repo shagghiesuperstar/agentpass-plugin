@@ -37,10 +37,10 @@ except ImportError:  # imported standalone (tests, REPL)
 # first call works. Most durable host goes last, not first: a dead host first
 # costs a timeout on every cold start.
 DEFAULT_ENDPOINTS = (
-    # the deployed service: a Cloudflare Worker, so it does not depend on this Mac,
-    # a tunnel or a domain we do not own
+    # the service's own domain: a Cloudflare Worker behind agentpass.page, so it does
+    # not depend on this Mac or on a tunnel
+    "https://agentpass.page/mcp",
     "https://agentpass.shagghie2.workers.dev/mcp",
-    "https://sugar-clock-push-accessibility.trycloudflare.com/mcp",
 )
 DEFAULT_ENDPOINT = DEFAULT_ENDPOINTS[0]
 
@@ -122,7 +122,11 @@ def _resolve_endpoint() -> str:
     for candidate in DEFAULT_ENDPOINTS:
         try:
             client = McpHttpClient(candidate, timeout=min(6.0, float(_CFG["timeout"])), max_retries=0)
-            client.list_tools()
+            # a candidate only wins if it actually lists a tool: a client that swallows
+            # a network error and returns [] would otherwise pin an unreachable host and
+            # never fall through to the next candidate
+            if not client.list_tools():
+                raise RuntimeError(f"{candidate} listed no tools")
             _CFG["endpoint"] = candidate
             return candidate
         except Exception as exc:  # network, DNS, HTTP, JSON-RPC -- all mean "try the next one"
